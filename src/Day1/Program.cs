@@ -7,8 +7,7 @@ namespace Day1
     {
         static void Main(string[] args)
         {
-            string path = "C:/AoC19/Inputs/Day1.txt";
-
+            string path = "../../../../../inputs/Day1.txt";
             var lines = File.ReadAllLines(path);
 
             var total = 0;
