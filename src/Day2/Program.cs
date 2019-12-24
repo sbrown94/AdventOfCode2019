@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Day2
 {
@@ -8,9 +9,29 @@ namespace Day2
     {
         static void Main(string[] args)
         {
+            int noun = 0;
+            int verb = 0;
+            int expected = 19690720;
+
             OpMachine opMachine = new OpMachine();
-            var result = opMachine.Run();
-            Output.OutputAndWait($"Value at position 0: {result}");
+
+            for (var n = 0; n < 100; n++)
+            {
+                for (var v = 0; v < 100; v++)
+                {
+                    var result = opMachine.Run(n, v);
+                    if (result == expected)
+                    {
+                        var output = (100 * n) + v;
+                        Output.OutputAndWait($"Output: {output}");
+                        Environment.Exit(0);
+                    }
+                    opMachine.Reset();
+                }
+            }
+
+            Output.OutputAndWait($"Did not find required value");
+            Environment.Exit(0);
         }
     }
 
@@ -18,13 +39,23 @@ namespace Day2
     {
         public int[] OpCodes { get; set; }
 
+        static int[] ValidOpCodes = new[] { 1, 2, 99 };
+
         public OpMachine()
+        {
+            Reset();
+        }
+
+        public void Reset()
         {
             OpCodes = FileReader.ReadAllSplitByCommaToInt("Day2");
         }
 
-        public int Run()
+        public int Run(int noun, int verb)
         {
+            OpCodes[1] = noun;
+            OpCodes[2] = verb;
+
             for (var index = 0; index < OpCodes.Length; index += 4)
             {
                 var code = OpCodes[index];
